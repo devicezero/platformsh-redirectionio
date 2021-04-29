@@ -1,0 +1,27 @@
+name: app
+# the actual runtime doesn't matter since we will only start the redirection.io binary
+type: nodejs:14
+
+hooks:
+  build: |
+    # download the agent and extract
+    wget https://packages.redirection.io/dist/stable/2/any/redirectionio-agent-latest_any_amd64.tar.gz
+    tar -xf redirectionio-agent-latest_any_amd64.tar.gz
+
+web:
+  commands:
+    # start the agent using our agent.yml
+    start: "redirection-agent/redirectionio-agent -config-file ~/agent.yml"
+
+
+mounts:
+    # if you want to persist rules locally, they will be saved here
+    'rules':
+        source: local
+        source_path: rules
+    # redirection.io log folder
+    'log':
+        source: local
+        source_path: log
+
+disk: 1024

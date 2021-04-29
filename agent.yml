@@ -1,0 +1,77 @@
+# Name of this instance, mandatory for logging
+#instance_name: dev-server
+
+# Interface listening. "" for all interfaces (not advised)
+# /run/redirectionio.sock or 127.0.0.1:10301
+# Default value: 127.0.0.1:10301
+# listen: 127.0.0.1:8888
+#listen: /run/redirectionio.sock # If you use a file, please make sure that user running the agent has the right to create it
+
+# Whether or not to store rules on the disk.
+# This allows to restart the agent with existing rules without the need to call redirection.io's backend
+# Default value: true
+#persist: true
+
+# Directory where the rules will be persisted
+datadir: "${PLATFORM_APP_DIR}/rules"
+
+# This setting allows to define the logging behavior for this instance. If it is set to "true", the instance will
+# be marked as allowed to log traffic. If it is set to "false", the instance will not collect traffic logs.
+# If this setting is not defined, or defined with any other value than "true" or "false", it will be managed
+# by the value defined in the manager graphical interface. Else, this setting takes precedence over the logging
+# behavior defined in the manager graphical interface.
+#logging: ~
+
+# This setting allows to set this instance in "test" mode. If this setting is not defined, or defined
+# with any other value than "true" or "false", it will be managed by the value defined in the
+# manager graphical interface. Else, this setting takes precedence over the logging behavior defined in the
+# manager graphical interface. If it is enabled, the value of the "logging" setting will be forced to "false".
+#test_mode: ~
+
+# Number of items to store in memory.
+# This makes the agent much faster, but will consume more memory on very large rulesets if this setting is high
+# With the default value, a very large ruleset should consume about 150-200 MB of memory
+# Set to 0 to disable the cache and minimize memory usage
+# Default value: 10000
+#cache: 10000
+
+# Keys of projects to preload
+# This allows to preload the agent with some projects rulesets at startup time
+#project_keys:
+#    - my_project_key_1
+#    - my_project_key_2
+
+# Run the agent as a reverse proxy
+# Leave it empty to disable the reverse proxy feature
+proxies:
+   -
+       listen: "127.0.0.1:${PORT}" # Listen endpoint
+       forward: "https://google.com:443" # Remote endpoint, need http or https
+       project_key: ${REDIRECTIONIO_PROJECT_KEY} # Project key to use
+       preserve_host: true # Preserve host header, defaults to false
+#    -
+#        listen: "0.0.0.0:443"
+#        forward: "http://127.0.0.1:8080"
+#        project_key: "A VALID PROJECT KEY"
+#        tls_cert_file: "/etc/ssl/my_certificate.cert"
+#        tls_key_file: "/etc/ssl/my_certificate.key"
+
+# Sets log configuration. Each section is optional and independent of one another.
+log:
+   file:
+       level: info
+       path: "${PLATFORM_APP_DIR}/log/agent.log"
+#
+#    syslog:
+#        # To push to the local syslog:
+#        #
+#        # network: "" # empty string
+#        # address: "" # empty string
+#        #
+#        # or, to remote server:
+#        #
+#        # network: "udp"
+#        # address: "localhost:514"
+#        #
+#        level: info
+#        tag: redirectionio-agent # optional
